@@ -52,7 +52,6 @@
 #include "GroupMgr.h"
 #include "Guild.h"
 #include "GuildMgr.h"
-#include "InstanceSaveMgr.h"
 #include "InstanceScript.h"
 #include "LFGMgr.h"
 #include "Log.h"
@@ -703,6 +702,7 @@ bool Player::Create(ObjectGuid::LowType guidlow, CharacterCreateInfo* createInfo
     }
     // all item positions resolved
     UpdateThorns();
+
     CheckAllAchievementCriteria();
 
     GetThreatManager().Initialize();
@@ -5228,7 +5228,7 @@ uint32 Player::GetShieldBlockValue() const
 
 float Player::GetMeleeCritFromAgility()
 {
-    uint8 level = STATIC_STAT_LEVEL;
+    uint8 level = getLevel();
     uint32 pclass = getClass();
 
     if (level > GT_MAX_LEVEL)
@@ -5276,7 +5276,7 @@ void Player::GetDodgeFromAgility(float& diminishing, float& nondiminishing)
         2.00f / 1.15f   // Druid
     };
 
-    uint8 level = STATIC_STAT_LEVEL;
+    uint8 level = getLevel();
     uint32 pclass = getClass();
 
     if (level > GT_MAX_LEVEL)
@@ -5298,7 +5298,7 @@ void Player::GetDodgeFromAgility(float& diminishing, float& nondiminishing)
 
 float Player::GetSpellCritFromIntellect()
 {
-    uint8 level = STATIC_STAT_LEVEL;
+    uint8 level = getLevel();
     uint32 pclass = getClass();
 
     if (level > GT_MAX_LEVEL)
@@ -5315,7 +5315,7 @@ float Player::GetSpellCritFromIntellect()
 
 float Player::GetRatingMultiplier(CombatRating cr) const
 {
-    uint8 level = STATIC_STAT_LEVEL;
+    uint8 level = getLevel();
 
     if (level > GT_MAX_LEVEL)
         level = GT_MAX_LEVEL;
