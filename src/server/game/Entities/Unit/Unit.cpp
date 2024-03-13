@@ -13519,17 +13519,20 @@ void Unit::AddComboPoints(Unit* target, int8 count)
 
 void Unit::ClearComboPoints(bool clearPoints)
 {
-    // remove Premed-like effects
-    // (NB: this Aura retains the CP while it's active - now that CP have reset, it shouldn't be there anymore)
-    RemoveAurasByType(SPELL_AURA_RETAIN_COMBO_POINTS);
+    if (m_comboTarget) {
 
-    if (clearPoints)
-    {
-        m_comboPoints = 0;
+        // remove Premed-like effects
+        // (NB: this Aura retains the CP while it's active - now that CP have reset, it shouldn't be there anymore)
+        RemoveAurasByType(SPELL_AURA_RETAIN_COMBO_POINTS);
+
+        if (clearPoints)
+        {
+            m_comboPoints = 0;
+        }
+        m_comboTarget->RemoveComboPointHolder(this);
+        m_comboTarget = nullptr;
+        SendComboPoints();
     }
-    m_comboTarget->RemoveComboPointHolder(this);
-    m_comboTarget = nullptr;
-    SendComboPoints();
 }
 
 void Unit::SetComboPoints(int amount)
