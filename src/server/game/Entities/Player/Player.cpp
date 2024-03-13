@@ -19,6 +19,7 @@
 #include "Player.h"
 #include "AccountMgr.h"
 #include "AchievementMgr.h"
+#include "AnticheatMgr.h"
 #include "ArenaSpectator.h"
 #include "ArenaTeam.h"
 #include "ArenaTeamMgr.h"
@@ -2280,11 +2281,6 @@ bool Player::IsInAreaTriggerRadius(AreaTrigger const* trigger, float delta) cons
     }
 
     return true;
-}
-
-bool Player::CanBeGameMaster() const
-{
-    return GetSession()->GetSecurity() > 2;
 }
 
 void Player::SetGameMaster(bool on)
@@ -15443,7 +15439,7 @@ void Player::_SaveCharacter(bool create, CharacterDatabaseTransaction trans)
 
 void Player::_LoadGlyphs(PreparedQueryResult result)
 {
-    // SELECT talentGroup, glyph1, glyph2, glyph3, glyph4, glyph5, glyph6 from character_glyphs WHERE guid = '{}'
+    // SELECT talentGroup, glyph1, glyph2, glyph3, glyph4, glyph5, glyph6 from character_glyphs WHERE guid = '%u'
     if (!result)
         return;
 

@@ -1493,7 +1493,7 @@ local void check_match(s, start, match, length)
     /* check that the match is indeed a match */
     if (zmemcmp(s->window + match,
                 s->window + start, length) != EQUAL) {
-        fprintf(stderr, " start {}, match {}, length {}\n",
+        fprintf(stderr, " start %u, match %u, length %d\n",
                 start, match, length);
         do {
             fprintf(stderr, "%c%c", s->window[match++], s->window[start++]);
@@ -1501,7 +1501,7 @@ local void check_match(s, start, match, length)
         z_error("invalid match");
     }
     if (z_verbose > 1) {
-        fprintf(stderr,"\\[{},{}]", start-match, length);
+        fprintf(stderr,"\\[%d,%d]", start-match, length);
         do { putc(s->window[start++], stderr); } while (--length != 0);
     }
 }

@@ -15,6 +15,7 @@
  * with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
+#include "AnticheatMgr.h"
 #include "ArenaSpectator.h"
 #include "Battleground.h"
 #include "BattlegroundMgr.h"
@@ -151,7 +152,7 @@ void WorldSession::HandleMoveWorldportAck()
         {
             _player->ClearReceivedSpectatorResetFor();
             _player->SetIsSpectator(true);
-            ArenaSpectator::SendCommand(_player, "{}ENABLE", SPECTATOR_ADDON_PREFIX);
+            ArenaSpectator::SendCommand(_player, "%sENABLE", SPECTATOR_ADDON_PREFIX);
             ((BattlegroundMap*)newMap)->GetBG()->AddSpectator(_player);
             ArenaSpectator::HandleResetCommand(_player);
         }
@@ -500,14 +501,10 @@ void WorldSession::HandleMovementOpcodes(WorldPacket& recvData)
 
     // interrupt parachutes upon falling or landing in water
     if (opcode == MSG_MOVE_FALL_LAND || opcode == MSG_MOVE_START_SWIM)
-    {
         mover->RemoveAurasWithInterruptFlags(AURA_INTERRUPT_FLAG_LANDING); // Parachutes
 
-        if (plrMover)
-        {
-            sScriptMgr->AnticheatSetJumpingbyOpcode(plrMover, false);
-        }
-    }
+    if (plrMover)
+        sAnticheatMgr->OnPlayerMove(plrMover, movementInfo, opcode);
 
     if (plrMover && ((movementInfo.flags & MOVEMENTFLAG_SWIMMING) != 0) != plrMover->IsInWater())
     {

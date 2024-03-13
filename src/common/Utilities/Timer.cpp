@@ -277,7 +277,7 @@ std::string Acore::Time::TimeToTimestampStr(Seconds time /*= 0s*/, std::string_v
 
     if (format.empty())
     {
-        format = "%Y-%m-{} %X";
+        format = "%Y-%m-%d %X";
     }
 
     ss << std::put_time(std::localtime(&t), format.c_str());
@@ -292,7 +292,7 @@ std::string Acore::Time::TimeToHumanReadable(Seconds time /*= 0s*/, std::string_
 
     if (format.empty())
     {
-        format = "%a %b {} %Y %X";
+        format = "%a %b %d %Y %X";
     }
 
     ss << std::put_time(std::localtime(&t), format.c_str());

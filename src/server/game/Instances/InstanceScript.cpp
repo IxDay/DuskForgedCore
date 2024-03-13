@@ -781,7 +781,7 @@ void InstanceScript::DoSendNotifyToInstance(char const* format, ...)
 
         instance->DoForAllPlayers([&, buff](Player* player)
         {
-            player->GetSession()->SendNotification("{}", buff);
+            player->GetSession()->SendNotification("%s", buff);
         });
     }
 }
