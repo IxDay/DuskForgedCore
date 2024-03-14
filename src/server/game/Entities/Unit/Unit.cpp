@@ -11464,7 +11464,6 @@ void Unit::SetSpeed(UnitMoveType mtype, float rate, bool forced)
                 if (Unit* critter = ObjectAccessor::GetUnit(*this, GetCritterGUID()))
                     critter->UpdateSpeed(mtype, forced);
             }
-            ToPlayer()->SetCanTeleport(true);
         }
 
         switch (mtype)
