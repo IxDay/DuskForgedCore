@@ -136,7 +136,7 @@ std::string _SpellScript::EffectNameCheck::ToString()
             return "SPELL_EFFECT_ANY";
         default:
             char num[10];
-            snprintf(num, sizeof(num), "{}", effName);
+            snprintf(num, sizeof(num), "%u", effName);
             return num;
     }
 }
@@ -158,7 +158,7 @@ std::string _SpellScript::EffectAuraNameCheck::ToString()
             return "SPELL_AURA_ANY";
         default:
             char num[10];
-            snprintf(num, sizeof(num), "{}", effAurName);
+            snprintf(num, sizeof(num), "%u", effAurName);
             return num;
     }
 }

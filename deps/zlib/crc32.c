@@ -393,7 +393,7 @@ local void make_crc_table(void) {
         for (n = 1; n <= 6; n++) {
             fprintf(out,
             "\n"
-            "#if N == {}\n", n);
+            "#if N == %d\n", n);
 
             /* compute braid tables for this N and 64-bit word_t */
             braid(ltl, big, n, 8);
@@ -407,7 +407,7 @@ local void make_crc_table(void) {
             for (k = 0; k < 8; k++) {
                 fprintf(out, "   {");
                 write_table(out, ltl[k], 256);
-                fprintf(out, "}{}", k < 7 ? ",\n" : "");
+                fprintf(out, "}%s", k < 7 ? ",\n" : "");
             }
             fprintf(out,
             "};\n"
@@ -416,7 +416,7 @@ local void make_crc_table(void) {
             for (k = 0; k < 8; k++) {
                 fprintf(out, "   {");
                 write_table64(out, big[k], 256);
-                fprintf(out, "}{}", k < 7 ? ",\n" : "");
+                fprintf(out, "}%s", k < 7 ? ",\n" : "");
             }
             fprintf(out,
             "};\n");
@@ -433,7 +433,7 @@ local void make_crc_table(void) {
             for (k = 0; k < 4; k++) {
                 fprintf(out, "   {");
                 write_table(out, ltl[k], 256);
-                fprintf(out, "}{}", k < 3 ? ",\n" : "");
+                fprintf(out, "}%s", k < 3 ? ",\n" : "");
             }
             fprintf(out,
             "};\n"
@@ -442,7 +442,7 @@ local void make_crc_table(void) {
             for (k = 0; k < 4; k++) {
                 fprintf(out, "   {");
                 write_table32hi(out, big[k], 256);
-                fprintf(out, "}{}", k < 3 ? ",\n" : "");
+                fprintf(out, "}%s", k < 3 ? ",\n" : "");
             }
             fprintf(out,
             "};\n"
@@ -478,7 +478,7 @@ local void write_table(FILE *out, const z_crc_t FAR *table, int k) {
     int n;
 
     for (n = 0; n < k; n++)
-        fprintf(out, "{}0x%08lx{}", n == 0 || n % 5 ? "" : "    ",
+        fprintf(out, "%s0x%08lx%s", n == 0 || n % 5 ? "" : "    ",
                 (unsigned long)(table[n]),
                 n == k - 1 ? "" : (n % 5 == 4 ? ",\n" : ", "));
 }
@@ -491,7 +491,7 @@ local void write_table32hi(FILE *out, const z_word_t FAR *table, int k) {
     int n;
 
     for (n = 0; n < k; n++)
-        fprintf(out, "{}0x%08lx{}", n == 0 || n % 5 ? "" : "    ",
+        fprintf(out, "%s0x%08lx%s", n == 0 || n % 5 ? "" : "    ",
                 (unsigned long)(table[n] >> 32),
                 n == k - 1 ? "" : (n % 5 == 4 ? ",\n" : ", "));
 }
@@ -507,7 +507,7 @@ local void write_table64(FILE *out, const z_word_t FAR *table, int k) {
     int n;
 
     for (n = 0; n < k; n++)
-        fprintf(out, "{}0x%016llx{}", n == 0 || n % 3 ? "" : "    ",
+        fprintf(out, "%s0x%016llx%s", n == 0 || n % 3 ? "" : "    ",
                 (unsigned long long)(table[n]),
                 n == k - 1 ? "" : (n % 3 == 2 ? ",\n" : ", "));
 }

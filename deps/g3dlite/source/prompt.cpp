@@ -485,8 +485,8 @@ static int textPrompt(
     int                 numChoices) {
 
     printf("\n___________________________________________________\n");
-    printf("{}\n", windowTitle);
-    printf("{}", prompt);
+    printf("%s\n", windowTitle);
+    printf("%s", prompt);
 
     if (numChoices > 10) {
         numChoices = 10;
@@ -502,9 +502,9 @@ static int textPrompt(
 
             for (int i = 0; i < numChoices; ++i) {
                 if (numChoices <= 3) {
-                    printf("  ({}) {} ", i, choice[i]);
+                    printf("  (%d) %s ", i, choice[i]);
                 } else {
-                    printf("  ({}) {}\n", i, choice[i]);
+                    printf("  (%d) %s\n", i, choice[i]);
                 }
             }
 
@@ -512,15 +512,15 @@ static int textPrompt(
             c = _getch() - '0';
 
             if ((c < 0) || (c >= numChoices)) {
-                printf("'{}' is not a valid choice.", c);
+                printf("'%d' is not a valid choice.", c);
             } else {
-                printf("{}", c);
+                printf("%d", c);
             }
         }
     
     } else if (numChoices == 1) {
         
-        printf("\nPress any key for '{}'...", choice[0]);
+        printf("\nPress any key for '%s'...", choice[0]);
         _getch();
         c = 0;
 
@@ -568,7 +568,7 @@ int prompt(
                 if (useGui){
                     //Will default to text prompt if numChoices > 4
 		  int result = guiPrompt(windowTitle, prompt, choice, numChoices);
-		  fprintf(stderr, "{}\n", result);
+		  fprintf(stderr, "%d\n", result);
 		  return result;
                 }
         #endif

@@ -145,7 +145,7 @@ void Log::CreateLoggerFromConfig(std::string const& appenderName)
 
     if (tokens.size() != 2)
     {
-        fmt::print(stderr, "Log::CreateLoggerFromConfig: Wrong config option Logger.{}={}\n", name, options);
+        fmt::print(stderr, "Log::CreateLoggerFromConfig: Wrong config option Logger.%s=%s\n", name, options);
         return;
     }
 
@@ -276,7 +276,7 @@ Logger const* Log::GetLoggerByType(std::string const& type) const
 
 std::string Log::GetTimestampStr()
 {
-    return Acore::Time::TimeToTimestampStr(GetEpochTime(), "%Y-%m-{}_%H_%M_{}");
+    return Acore::Time::TimeToTimestampStr(GetEpochTime(), "%Y-%m-%d_%H_%M_%S");
 }
 
 bool Log::SetLogLevel(std::string const& name, int32 newLeveli, bool isLogger /* = true */)

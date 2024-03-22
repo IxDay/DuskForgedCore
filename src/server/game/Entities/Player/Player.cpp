@@ -19,6 +19,7 @@
 #include "Player.h"
 #include "AccountMgr.h"
 #include "AchievementMgr.h"
+#include "AnticheatMgr.h"
 #include "ArenaSpectator.h"
 #include "ArenaTeam.h"
 #include "ArenaTeamMgr.h"
@@ -1036,7 +1037,7 @@ void Player::setDeathState(DeathState s, bool /*despawn = false*/)
         // drunken state is cleared on death
         SetDrunkValue(0);
         // lost combo points at any target (targeted combo points clear in Unit::setDeathState)
-        ClearComboPoints(false);
+        ClearComboPoints(true);
 
         clearResurrectRequestData();
 
@@ -1716,7 +1717,7 @@ void Player::RemoveFromWorld()
         StopCastingCharm();
         StopCastingBindSight();
         UnsummonPetTemporaryIfAny();
-        ClearComboPoints(); // pussywizard: crashfix
+        ClearComboPoints(true); // pussywizard: crashfix
         ClearComboPointHolders(); // pussywizard: crashfix
         if (ObjectGuid lguid = GetLootGUID()) // pussywizard: crashfix
             m_session->DoLootRelease(lguid);
@@ -1788,8 +1789,6 @@ void Player::RegenerateAll()
     {
         if (!IsInCombat())
             AddComboPoints(-1);
-
-        m_ComboPointDegenTimer -= 10000;
     }
 
     if (m_regenTimerCount >= 2000)
@@ -2280,11 +2279,6 @@ bool Player::IsInAreaTriggerRadius(AreaTrigger const* trigger, float delta) cons
     }
 
     return true;
-}
-
-bool Player::CanBeGameMaster() const
-{
-    return GetSession()->GetSecurity() > 2;
 }
 
 void Player::SetGameMaster(bool on)
@@ -15443,7 +15437,7 @@ void Player::_SaveCharacter(bool create, CharacterDatabaseTransaction trans)
 
 void Player::_LoadGlyphs(PreparedQueryResult result)
 {
-    // SELECT talentGroup, glyph1, glyph2, glyph3, glyph4, glyph5, glyph6 from character_glyphs WHERE guid = '{}'
+    // SELECT talentGroup, glyph1, glyph2, glyph3, glyph4, glyph5, glyph6 from character_glyphs WHERE guid = '%u'
     if (!result)
         return;
 

@@ -843,7 +843,7 @@ void WorldSession::HandlePlayerLoginFromDB(LoginQueryHolder const& holder)
 
         // send server info
         if (sWorld->getIntConfig(CONFIG_ENABLE_SINFO_LOGIN) == 1)
-            chH.PSendSysMessage("{}", GitRevision::GetFullVersion());
+            chH.PSendSysMessage("%s", GitRevision::GetFullVersion());
     }
 
     if (uint32 guildId = sCharacterCache->GetCharacterGuildIdByGuid(pCurrChar->GetGUID()))
@@ -891,7 +891,7 @@ void WorldSession::HandlePlayerLoginFromDB(LoginQueryHolder const& holder)
 
             // send new char string if not empty
             if (!sWorld->GetNewCharString().empty())
-                chH.PSendSysMessage("{}", sWorld->GetNewCharString().c_str());
+                chH.PSendSysMessage("%s", sWorld->GetNewCharString().c_str());
         }
     }
 
@@ -1159,7 +1159,7 @@ void WorldSession::HandlePlayerLoginToCharInWorld(Player* pCurrChar)
 
         // send server info
         if (sWorld->getIntConfig(CONFIG_ENABLE_SINFO_LOGIN) == 1)
-            chH.PSendSysMessage("{}", GitRevision::GetFullVersion());
+            chH.PSendSysMessage("%s", GitRevision::GetFullVersion());
 
         LOG_DEBUG("network.opcode", "WORLD: Sent server info");
     }
@@ -2208,8 +2208,8 @@ void WorldSession::HandleCharFactionOrRaceChangeCallback(std::shared_ptr<Charact
                     };
 
                     uint32 nodeId = itr.first;
-                    uint8 field = (uint8)((nodeId - 1) / 32);
-                    uint32 submask = 1 << ((nodeId - 1) % 32);
+                    uint8 field = (uint8)((nodeId) / 32);
+                    uint32 submask = 1 << ((nodeId) % 32);
 
                     if ((factionMask[field] & submask) == 0)
                     {

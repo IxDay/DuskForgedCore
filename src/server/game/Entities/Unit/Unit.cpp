@@ -3237,7 +3237,7 @@ SpellMissInfo Unit::MeleeSpellHitResult(Unit* victim, SpellInfo const* spellInfo
 
     bool canDodge = !spellInfo->HasAttribute(SPELL_ATTR7_NO_ATTACK_DODGE);
     bool canParry = !spellInfo->HasAttribute(SPELL_ATTR7_NO_ATTACK_PARRY);
-    bool canBlock = spellInfo->HasAttribute(SPELL_ATTR3_COMPLETELY_BLOCKED) && !spellInfo->HasAttribute(SPELL_ATTR0_CU_DIRECT_DAMAGE);
+    bool canBlock = spellInfo->HasAttribute(SPELL_ATTR3_COMPLETELY_BLOCKED) && !spellInfo->HasAttribute(SPELL_ATTR0_CU_DIRECT_DAMAGE) && !spellInfo->HasAttribute(SPELL_ATTR1_CU_NO_ATTACK_BLOCK);
 
     // Same spells cannot be parry/dodge
     if (spellInfo->HasAttribute(SPELL_ATTR0_NO_ACTIVE_DEFENSE))
@@ -6536,7 +6536,7 @@ void Unit::SendSpellNonMeleeReflectLog(SpellNonMeleeDamage* log, Unit* attacker)
     data << uint8 (log->schoolMask);                        // damage school
     data << uint32(absorb);                                 // AbsorbedDamage
     data << uint32(log->resist);                            // resist
-    data << uint8 (log->physicalLog);                       // if 1, then client show spell name (example: {}'s ranged shot hit {} for {} school or {} suffers {} school damage from {}'s spell_name
+    data << uint8 (log->physicalLog);                       // if 1, then client show spell name (example: %s's ranged shot hit %s for %u school or %s suffers %u school damage from %s's spell_name
     data << uint8 (log->unused);                            // unused
     data << uint32(log->blocked);                           // blocked
     data << uint32(log->HitInfo);
@@ -6564,7 +6564,7 @@ void Unit::SendSpellNonMeleeDamageLog(SpellNonMeleeDamage* log)
     data << uint8 (log->schoolMask);                        // damage school
     data << uint32(absorb);                                 // AbsorbedDamage
     data << uint32(log->resist);                            // resist
-    data << uint8 (log->physicalLog);                       // if 1, then client show spell name (example: {}'s ranged shot hit {} for {} school or {} suffers {} school damage from {}'s spell_name
+    data << uint8 (log->physicalLog);                       // if 1, then client show spell name (example: %s's ranged shot hit %s for %u school or %s suffers %u school damage from %s's spell_name
     data << uint8 (log->unused);                            // unused
     data << uint32(log->blocked);                           // blocked
     data << uint32(log->HitInfo);
@@ -11464,7 +11464,6 @@ void Unit::SetSpeed(UnitMoveType mtype, float rate, bool forced)
                 if (Unit* critter = ObjectAccessor::GetUnit(*this, GetCritterGUID()))
                     critter->UpdateSpeed(mtype, forced);
             }
-            ToPlayer()->SetCanTeleport(true);
         }
 
         switch (mtype)
@@ -13519,22 +13518,20 @@ void Unit::AddComboPoints(Unit* target, int8 count)
 
 void Unit::ClearComboPoints(bool clearPoints)
 {
-    if (!m_comboTarget)
-    {
-        return;
-    }
+    if (m_comboTarget) {
 
-    // remove Premed-like effects
-    // (NB: this Aura retains the CP while it's active - now that CP have reset, it shouldn't be there anymore)
-    RemoveAurasByType(SPELL_AURA_RETAIN_COMBO_POINTS);
+        // remove Premed-like effects
+        // (NB: this Aura retains the CP while it's active - now that CP have reset, it shouldn't be there anymore)
+        RemoveAurasByType(SPELL_AURA_RETAIN_COMBO_POINTS);
 
-    if (clearPoints)
-    {
-        m_comboPoints = 0;
+        if (clearPoints)
+        {
+            m_comboPoints = 0;
+        }
+        m_comboTarget->RemoveComboPointHolder(this);
+        m_comboTarget = nullptr;
+        SendComboPoints();
     }
-    m_comboTarget->RemoveComboPointHolder(this);
-    m_comboTarget = nullptr;
-    SendComboPoints();
 }
 
 void Unit::SetComboPoints(int amount)

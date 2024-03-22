@@ -327,22 +327,22 @@ void makefixed(void)
     puts("     */");
     puts("");
     size = 1U << 9;
-    printf("    static const code lenfix[{}] = {", size);
+    printf("    static const code lenfix[%u] = {", size);
     low = 0;
     for (;;) {
         if ((low % 7) == 0) printf("\n        ");
-        printf("{{},{},{}}", (low & 127) == 99 ? 64 : state.lencode[low].op,
+        printf("{%u,%u,%d}", (low & 127) == 99 ? 64 : state.lencode[low].op,
                state.lencode[low].bits, state.lencode[low].val);
         if (++low == size) break;
         putchar(',');
     }
     puts("\n    };");
     size = 1U << 5;
-    printf("\n    static const code distfix[{}] = {", size);
+    printf("\n    static const code distfix[%u] = {", size);
     low = 0;
     for (;;) {
         if ((low % 6) == 0) printf("\n        ");
-        printf("{{},{},{}}", state.distcode[low].op, state.distcode[low].bits,
+        printf("{%u,%u,%d}", state.distcode[low].op, state.distcode[low].bits,
                state.distcode[low].val);
         if (++low == size) break;
         putchar(',');
@@ -835,13 +835,13 @@ int ZEXPORT inflate(z_streamp strm, int flush) {
             DROPBITS(1);
             switch (BITS(2)) {
             case 0:                             /* stored block */
-                Tracev((stderr, "inflate:     stored block{}\n",
+                Tracev((stderr, "inflate:     stored block%s\n",
                         state->last ? " (last)" : ""));
                 state->mode = STORED;
                 break;
             case 1:                             /* fixed block */
                 fixedtables(state);
-                Tracev((stderr, "inflate:     fixed codes block{}\n",
+                Tracev((stderr, "inflate:     fixed codes block%s\n",
                         state->last ? " (last)" : ""));
                 state->mode = LEN_;             /* decode codes */
                 if (flush == Z_TREES) {
@@ -850,7 +850,7 @@ int ZEXPORT inflate(z_streamp strm, int flush) {
                 }
                 break;
             case 2:                             /* dynamic block */
-                Tracev((stderr, "inflate:     dynamic codes block{}\n",
+                Tracev((stderr, "inflate:     dynamic codes block%s\n",
                         state->last ? " (last)" : ""));
                 state->mode = TABLE;
                 break;
@@ -869,7 +869,7 @@ int ZEXPORT inflate(z_streamp strm, int flush) {
                 break;
             }
             state->length = (unsigned)hold & 0xffff;
-            Tracev((stderr, "inflate:       stored length {}\n",
+            Tracev((stderr, "inflate:       stored length %u\n",
                     state->length));
             INITBITS();
             state->mode = COPY_;
@@ -1080,7 +1080,7 @@ int ZEXPORT inflate(z_streamp strm, int flush) {
                 DROPBITS(state->extra);
                 state->back += state->extra;
             }
-            Tracevv((stderr, "inflate:         length {}\n", state->length));
+            Tracevv((stderr, "inflate:         length %u\n", state->length));
             state->was = state->length;
             state->mode = DIST;
                 /* fallthrough */
@@ -1126,7 +1126,7 @@ int ZEXPORT inflate(z_streamp strm, int flush) {
                 break;
             }
 #endif
-            Tracevv((stderr, "inflate:         distance {}\n", state->offset));
+            Tracevv((stderr, "inflate:         distance %u\n", state->offset));
             state->mode = MATCH;
                 /* fallthrough */
         case MATCH:

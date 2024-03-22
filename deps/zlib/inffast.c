@@ -128,7 +128,7 @@ void ZLIB_INTERNAL inflate_fast(z_streamp strm, unsigned start) {
                 hold >>= op;
                 bits -= op;
             }
-            Tracevv((stderr, "inflate:         length {}\n", len));
+            Tracevv((stderr, "inflate:         length %u\n", len));
             if (bits < 15) {
                 hold += (unsigned long)(*in++) << bits;
                 bits += 8;
@@ -162,7 +162,7 @@ void ZLIB_INTERNAL inflate_fast(z_streamp strm, unsigned start) {
 #endif
                 hold >>= op;
                 bits -= op;
-                Tracevv((stderr, "inflate:         distance {}\n", dist));
+                Tracevv((stderr, "inflate:         distance %u\n", dist));
                 op = (unsigned)(out - beg);     /* max distance in output */
                 if (dist > op) {                /* see if copy from window */
                     op = dist - op;             /* distance back in window */

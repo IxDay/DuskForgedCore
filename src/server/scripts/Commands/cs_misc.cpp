@@ -358,43 +358,43 @@ public:
         switch (error)
         {
             case 1:
-                handler->PSendSysMessage("Player {} not found.", last_name.c_str());
+                handler->PSendSysMessage("Player %s not found.", last_name.c_str());
                 break;
             case 2:
-                handler->PSendSysMessage("Player {} is being teleported.", last_name.c_str());
+                handler->PSendSysMessage("Player %s is being teleported.", last_name.c_str());
                 break;
             case 3:
-                handler->PSendSysMessage("Player {} is in instance/battleground/arena.", last_name.c_str());
+                handler->PSendSysMessage("Player %s is in instance/battleground/arena.", last_name.c_str());
                 break;
             case 4:
-                handler->PSendSysMessage("Player {} is in LFG system.", last_name.c_str());
+                handler->PSendSysMessage("Player %s is in LFG system.", last_name.c_str());
                 break;
             case 5:
-                handler->PSendSysMessage("Player {} is queued for battleground/arena.", last_name.c_str());
+                handler->PSendSysMessage("Player %s is queued for battleground/arena.", last_name.c_str());
                 break;
             case 6:
-                handler->PSendSysMessage("Player {} is not in group.", last_name.c_str());
+                handler->PSendSysMessage("Player %s is not in group.", last_name.c_str());
                 break;
             case 7:
-                handler->PSendSysMessage("Player {} is not in normal group.", last_name.c_str());
+                handler->PSendSysMessage("Player %s is not in normal group.", last_name.c_str());
                 break;
             case 8:
-                handler->PSendSysMessage("Group of player {} has invalid member count.", last_name.c_str());
+                handler->PSendSysMessage("Group of player %s has invalid member count.", last_name.c_str());
                 break;
             case 9:
-                handler->PSendSysMessage("Players {} are not in the same group.", last_name.c_str());
+                handler->PSendSysMessage("Players %s are not in the same group.", last_name.c_str());
                 break;
             case 10:
-                handler->PSendSysMessage("Player {} is in flight.", last_name.c_str());
+                handler->PSendSysMessage("Player %s is in flight.", last_name.c_str());
                 break;
             case 11:
-                handler->PSendSysMessage("Player {} is dead.", last_name.c_str());
+                handler->PSendSysMessage("Player %s is dead.", last_name.c_str());
                 break;
             case 12:
-                handler->PSendSysMessage("Player {} is in a group.", last_name.c_str());
+                handler->PSendSysMessage("Player %s is in a group.", last_name.c_str());
                 break;
             case 13:
-                handler->PSendSysMessage("Player {} occurs more than once.", last_name.c_str());
+                handler->PSendSysMessage("Player %s occurs more than once.", last_name.c_str());
                 break;
         }
 
@@ -2074,10 +2074,10 @@ public:
         }
 
         // Can be used to query data from World database
-        WorldDatabasePreparedStatement* xpQuery = WorldDatabase.GetPreparedStatement(WORLD_SEL_REQ_XP);
-        xpQuery->SetData(0, level);
+        WorldDatabasePreparedStatement* xQuery = WorldDatabase.GetPreparedStatement(WORLD_SEL_REQ_XP);
+        xQuery->SetData(0, level);
 
-        PreparedQueryResult xpResult = WorldDatabase.Query(xpQuery);
+        PreparedQueryResult xpResult = WorldDatabase.Query(xQuery);
         if (xpResult)
         {
             Field* fields = xpResult->Fetch();
@@ -2085,10 +2085,10 @@ public:
         }
 
         // Can be used to query data from Characters database
-        CharacterDatabasePreparedStatement* charXpQuery = CharacterDatabase.GetPreparedStatement(CHAR_SEL_PINFO_XP);
-        charXpQuery->SetData(0, lowguid);
+        CharacterDatabasePreparedStatement* charXQuery = CharacterDatabase.GetPreparedStatement(CHAR_SEL_PINFO_XP);
+        charXQuery->SetData(0, lowguid);
 
-        PreparedQueryResult charXpResult = CharacterDatabase.Query(charXpQuery);
+        PreparedQueryResult charXpResult = CharacterDatabase.Query(charXQuery);
         if (charXpResult)
         {
             Field* fields = charXpResult->Fetch();
