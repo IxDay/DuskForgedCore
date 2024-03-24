@@ -1834,6 +1834,7 @@ public:
     void RemoveArenaSpellCooldowns(bool removeActivePetCooldowns = false);
     void RemoveAllSpellCooldown();
     void RemoveAllSpellCooldownWithoutIds(std::vector<uint32> ids);
+    void RemoveSpellRelatedDebuffs();
     void _LoadSpellCooldowns(PreparedQueryResult result);
     void _SaveSpellCooldowns(CharacterDatabaseTransaction trans, bool logout);
     uint32 GetLastPotionId() { return m_lastPotionId; }

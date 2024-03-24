@@ -2821,6 +2821,7 @@ void SpellMgr::LoadSpellInfoCustomAttributes()
 
             uint32 const spellId = fields[0].Get<uint32>();
             uint32 attributes = fields[1].Get<uint32>();
+            uint32 attributesEx = fields[2].Get<uint32>();
 
             SpellInfo* spellInfo = _GetSpellInfo(spellId);
             if (!spellInfo)
@@ -2874,7 +2875,26 @@ void SpellMgr::LoadSpellInfoCustomAttributes()
                 attributes &= ~(SPELL_ATTR0_CU_FORCE_AURA_SAVING | SPELL_ATTR0_CU_AURA_CANNOT_BE_SAVED);
             }
 
+            if ((attributesEx & SPELL_ATTR1_CU_USE_TARGETS_LEVEL_FOR_SPELL_SCALING) && (attributesEx & SPELL_ATTR1_CU_IGNORES_CASTER_LEVEL))
+            {
+                LOG_ERROR("sql.sql", "Table `spell_custom_attr` attributesEx field has attributes SPELL_ATTR1_CU_USE_TARGETS_LEVEL_FOR_SPELL_SCALING and SPELL_ATTR1_CU_IGNORES_CASTER_LEVEL which cannot stack for spell {}. Both attributes will be ignored.", spellId);
+                attributesEx &= ~(SPELL_ATTR1_CU_USE_TARGETS_LEVEL_FOR_SPELL_SCALING | SPELL_ATTR1_CU_IGNORES_CASTER_LEVEL);
+            }
+
+            if ((attributesEx & SPELL_ATTR1_CU_NOT_USABLE_IN_INSTANCES) && (attributesEx & SPELL_ATTR1_CU_USABLE_IN_INSTANCES_ONLY))
+            {
+                LOG_ERROR("sql.sql", "Table `spell_custom_attr` attributesEx field has attributes SPELL_ATTR1_CU_NOT_USABLE_IN_INSTANCES and SPELL_ATTR1_CU_USABLE_IN_INSTANCES_ONLY which cannot stack for spell {}. Both attributes will be ignored.", spellId);
+                attributesEx &= ~(SPELL_ATTR1_CU_NOT_USABLE_IN_INSTANCES | SPELL_ATTR1_CU_USABLE_IN_INSTANCES_ONLY);
+            }
+
+            if ((attributesEx & SPELL_ATTR1_CU_NOT_USABLE_IN_INSTANCES) && (attributesEx & SPELL_ATTR1_CU_REMOVE_OUTSIDE_DUNGEONS_AND_RAIDS))
+            {
+                LOG_ERROR("sql.sql", "Table `spell_custom_attr` attributesEx field has attributes SPELL_ATTR1_CU_NOT_USABLE_IN_INSTANCES and SPELL_ATTR1_CU_REMOVE_OUTSIDE_DUNGEONS_AND_RAIDS which cannot stack for spell {}. Both attributes will be ignored.", spellId);
+                attributesEx &= ~(SPELL_ATTR1_CU_NOT_USABLE_IN_INSTANCES | SPELL_ATTR1_CU_REMOVE_OUTSIDE_DUNGEONS_AND_RAIDS);
+            }
+
             spellInfo->AttributesCu |= attributes;
+            spellInfo->AttributesCu |= attributesEx;
         }
         LOG_INFO("server.loading", ">> Loaded {} spell custom attributes from DB in {} ms", count, GetMSTimeDiffToNow(customAttrTime));
     }
