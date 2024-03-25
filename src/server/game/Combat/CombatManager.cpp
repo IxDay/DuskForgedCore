@@ -80,9 +80,11 @@ void CombatReference::EndCombat()
 
     // ...and if that happened, also notify the AI of it...
     if (needFirstAI && first->IsAIEnabled)
-        first->GetAI()->JustExitedCombat();
+        if (UnitAI* firstAI = first->GetAI())
+            firstAI->JustExitedCombat();
     if (needSecondAI && second->IsAIEnabled)
-        second->GetAI()->JustExitedCombat();
+        if (UnitAI* secondAI = second->GetAI())
+            secondAI->JustExitedCombat();
 
     // ...and finally clean up the reference object
     delete this;
@@ -377,7 +379,7 @@ bool CombatManager::UpdateOwnerCombatState() const
     if (combatState)
     {
         _owner->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_IN_COMBAT);
-        _owner->AtEnterCombat();
+        _owner->AtJustEngagedWith();
     }
     else
     {

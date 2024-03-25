@@ -292,8 +292,6 @@ bool CreatureAI::UpdateVictimWithGaze()
 
 bool CreatureAI::UpdateVictim()
 {
-    uint32 ent = me->GetEntry();
-
     if (!me->IsEngaged())
         return false;
     
@@ -303,11 +301,11 @@ bool CreatureAI::UpdateVictim()
             if (victim != me->GetVictim())
                 AttackStart(victim);
 
-        return me->GetVictim();
+        return me->GetVictim() != nullptr;
     }
     else if (!me->IsInCombat())
     {
-        EnterEvadeMode(EvadeReason::EVADE_REASON_NO_HOSTILES);
+        EnterEvadeMode(EVADE_REASON_NO_HOSTILES);
         return false;
     }
     else if (me->GetVictim())

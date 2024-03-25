@@ -1707,7 +1707,7 @@ public:
     // For NPCs with threat list: Whether there are any enemies on our threat list
     // For other units: Whether we're in combat
     // This value is different from IsInCombat when a projectile spell is midair (combat on launch - threat+aggro on impact)
-    virtual bool IsEngaged() const { return IsInCombat(); }
+    bool IsEngaged() const { return CanHaveThreatList() ? m_threatManager.IsEngaged() : IsInCombat(); }
     bool IsEngagedBy(Unit const* who) const { return CanHaveThreatList() ? IsThreatenedBy(who) : IsInCombatWith(who); }
     void EngageWithTarget(Unit* who); // Adds target to threat list if applicable, otherwise just sets combat state
     // Combat handling

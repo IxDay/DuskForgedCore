@@ -26,7 +26,7 @@
 #include <unordered_map>
 #include <vector>
 
-//==============================================================
+ //==============================================================
 
 class Unit;
 class SpellInfo;
@@ -104,11 +104,10 @@ public:
     // identical to ThreatManager::CanHaveThreatList(GetOwner())
     bool CanHaveThreatList() const { return _ownerCanHaveThreatList; }
     // returns the victim selected by the last SelectVictim call - this can be nullptr
-    Unit* GetCurrentVictim() const;
+    Unit* GetCurrentVictim();
+    Unit* GetLastVictim() const;
     // returns an arbitrary non-offline victim from owner's threat list if one exists, nullptr otherwise
     Unit* GetAnyTarget() const;
-    // selects a (potentially new) victim from the threat list and returns it - this can be nullptr
-    Unit* SelectVictim();
 
     bool IsEngaged() const { return _ownerEngaged; }
     // are there any entries in owner's threat list?
@@ -137,13 +136,14 @@ public:
     bool IsThreateningTo(Unit const* who, bool includeOffline = false) const;
     auto const& GetThreatenedByMeList() const { return _threatenedByMe; }
 
+    void EvaluateSuppressed(bool canExpire = false);
     // Notify the ThreatManager that a condition changed that may impact refs' online state so it can re-evaluate
     void UpdateOnlineStates(bool meThreateningOthers = true, bool othersThreateningMe = true);
     ///== AFFECT MY THREAT LIST ==
     void AddThreat(Unit* target, float amount, SpellInfo const* spell = nullptr, bool ignoreModifiers = false, bool ignoreRedirects = false);
     void ScaleThreat(Unit* target, float factor);
     // Modify target's threat by +percent%
-    void ModifyThreatByPercent(Unit* target, int32 percent) { if (percent) ScaleThreat(target, 0.01f*float(100 + percent)); }
+    void ModifyThreatByPercent(Unit* target, int32 percent) { if (percent) ScaleThreat(target, 0.01f * float(100 + percent)); }
     // Resets the specified unit's threat to zero
     void ResetThreat(Unit* target) { ScaleThreat(target, 0.0f); }
     // Sets the specified unit's threat to be equal to the highest entry on the threat list
@@ -154,11 +154,12 @@ public:
     void ResetAllThreat();
     // Removes specified target from the threat list
     void ClearThreat(Unit* target);
+    void ClearThreat(ThreatReference* ref);
     // Removes all targets from the threat list (will cause evade in UpdateVictim if called)
     void ClearAllThreat();
 
     // sends SMSG_THREAT_UPDATE to all nearby clients (used by client to forward threat list info to addons)
-    void SendThreatListToClients() const;
+    void SendThreatListToClients(bool newHighest) const;
 
     ///== AFFECT OTHERS' THREAT LISTS ==
     // what it says on the tin - call AddThreat on everything that's threatened by us with the specified params
@@ -194,6 +195,12 @@ private:
     ///== MY THREAT LIST ==
     void PutThreatListRef(ObjectGuid const& guid, ThreatReference* ref);
     void PurgeThreatListRef(ObjectGuid const& guid, bool sendRemove);
+
+    void ProcessAIUpdates();
+    void RegisterForAIUpdate(ObjectGuid const& guid) { _needsAIUpdate.push_back(guid); }
+    std::vector<ObjectGuid> _needsAIUpdate;
+
+    void UpdateVictim();
 
     uint32 _updateClientTimer;
     threat_list_heap _sortedThreatList;
@@ -234,6 +241,7 @@ public:
     OnlineState GetOnlineState() const { return _online; }
     bool IsOnline() const { return (_online >= ONLINE_STATE_ONLINE); }
     bool IsAvailable() const { return (_online > ONLINE_STATE_OFFLINE); }
+    bool IsSuppressed() const { return (_online == ONLINE_STATE_SUPPRESSED); }
     bool IsOffline() const { return (_online <= ONLINE_STATE_OFFLINE); }
     TauntState GetTauntState() const { return _taunted; }
     bool IsTaunting() const { return _taunted == TAUNT_STATE_TAUNT; }
@@ -242,7 +250,7 @@ public:
     void SetThreat(float amount) { _baseAmount = amount; HeapNotifyChanged(); }
     void AddThreat(float amount);
     void ScaleThreat(float factor);
-    void ModifyThreatByPercent(int32 percent) { if (percent) ScaleThreat(0.01f*float(100 + percent)); }
+    void ModifyThreatByPercent(int32 percent) { if (percent) ScaleThreat(0.01f * float(100 + percent)); }
     void UpdateOnlineState();
 
     void ClearThreat(bool sendRemove = true); // dealloc's this
@@ -268,6 +276,10 @@ public:
 
     friend class ThreatMgr;
     friend struct CompareThreatLessThan;
+
+protected:
+    void UnregisterAndFree();
+    bool ShouldBeSuppressed() const;
 };
 
 inline bool CompareThreatLessThan::operator()(ThreatReference const* a, ThreatReference const* b) const { return ThreatMgr::CompareReferencesLT(a, b, 1.0f); }

@@ -1205,31 +1205,8 @@ Unit* Creature::SelectVictim()
 {
     Unit* target = nullptr;
 
-    ThreatMgr& mgr = GetThreatManager();
-
-    if (mgr.CanHaveThreatList())
-    {
-        target = mgr.SelectVictim();
-        while (!target)
-        {
-            Unit* newTarget = nullptr;
-            // nothing found to attack - try to find something we're in combat with (but don't have a threat entry for yet) and start attacking it
-            for (auto const& pair : GetCombatManager().GetPvECombatRefs())
-            {
-                newTarget = pair.second->GetOther(this);
-                if (!mgr.IsThreatenedBy(newTarget, true))
-                {
-                    mgr.AddThreat(newTarget, 0.0f, nullptr, true, true);
-                    break;
-                }
-                else
-                    newTarget = nullptr;
-            }
-            if (!newTarget)
-                break;
-            target = mgr.SelectVictim();
-        }
-    }
+    if (CanHaveThreatList())
+        target = GetThreatManager().GetCurrentVictim();
     else if (!HasReactState(REACT_PASSIVE))
     {
         // We're a player pet, probably
@@ -1298,9 +1275,9 @@ Unit* Creature::SelectVictim()
     return nullptr;
 }
 
-void Creature::AtEnterCombat()
+void Creature::AtJustEngagedWith()
 {
-    Unit::AtEnterCombat();
+    Unit::AtJustEngagedWith();
 
     if (!(GetCreatureTemplate()->type_flags & CREATURE_TYPE_FLAG_ALLOW_MOUNTED_COMBAT))
         Dismount();

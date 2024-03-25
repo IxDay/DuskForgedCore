@@ -2807,7 +2807,7 @@ void SpellMgr::LoadSpellInfoCustomAttributes()
     uint32 const customAttrTime = getMSTime();
     uint32 count;
 
-    QueryResult result = WorldDatabase.Query("SELECT spell_id, attributes FROM spell_custom_attr");
+    QueryResult result = WorldDatabase.Query("SELECT * FROM spell_custom_attr");
 
     if (!result)
     {

@@ -14001,7 +14001,7 @@ float Unit::CalculateDefaultCoefficient(SpellInfo const* spellInfo, DamageEffect
         if (!spellInfo->IsChanneled() && DotDuration > 0)
             DotFactor = DotDuration / 15000.0f;
 
-        if (uint32 DotTicks = spellInfo->GetNoHasteTicks())
+        if (uint32 DotTicks = spellInfo->GetMaxTicks())
         {
             DotFactor /= DotTicks;
         }
