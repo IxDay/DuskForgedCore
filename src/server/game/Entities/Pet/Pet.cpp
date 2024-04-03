@@ -1880,7 +1880,9 @@ bool Pet::addSpell(uint32 spellId, ActiveStates active /*= ACT_DECIDE*/, PetSpel
         if (aura->GetSpellInfo()->CasterAuraState == AURA_STATE_HEALTHLESS_35_PERCENT ||
                 aura->GetSpellInfo()->CasterAuraState == AURA_STATE_HEALTH_ABOVE_75_PERCENT ||
                 aura->GetSpellInfo()->CasterAuraState == AURA_STATE_HEALTHLESS_20_PERCENT ||
-                aura->GetSpellInfo()->CasterAuraState == AURA_STATE_POWER_BELOW_50_PERCENT)
+                aura->GetSpellInfo()->CasterAuraState == AURA_STATE_POWER_BELOW_50_PERCENT ||
+                aura->GetSpellInfo()->CasterAuraState == AURA_STATE_POWER_BELOW_20_PERCENT ||
+                aura->GetSpellInfo()->CasterAuraState == AURA_STATE_POWER_ABOVE_80_PERCENT)
             if (!HasAuraState((AuraStateType)aura->GetSpellInfo()->CasterAuraState))
             {
                 aura->HandleAllEffects(aura->GetApplicationOfTarget(GetGUID()), AURA_EFFECT_HANDLE_REAL, false);

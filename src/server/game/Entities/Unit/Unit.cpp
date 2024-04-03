@@ -541,7 +541,9 @@ void Unit::Update(uint32 p_time)
     ModifyAuraState(AURA_STATE_HEALTHLESS_20_PERCENT, IsAlive() ? HealthBelowPct(20) : false);
     ModifyAuraState(AURA_STATE_HEALTHLESS_35_PERCENT, IsAlive() ? HealthBelowPct(35) : false);
     ModifyAuraState(AURA_STATE_HEALTH_ABOVE_75_PERCENT, IsAlive() ? HealthAbovePct(75) : false);
-    ModifyAuraState(AURA_STATE_POWER_BELOW_50_PERCENT, IsAlive() ? PowerBelowPct(50) : false);
+    ModifyAuraState(AURA_STATE_POWER_BELOW_20_PERCENT, IsAlive() ? PowerBelowPct(20.f) : false);
+    ModifyAuraState(AURA_STATE_POWER_BELOW_50_PERCENT, IsAlive() ? PowerBelowPct(50.f) : false);
+    ModifyAuraState(AURA_STATE_POWER_ABOVE_80_PERCENT, IsAlive() ? PowerAbovePct(80.f) : false);
 
     UpdateSplineMovement(p_time);
     GetMotionMaster()->UpdateMotion(p_time);

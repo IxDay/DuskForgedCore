@@ -1365,13 +1365,7 @@ bool Creature::IsValidTrainerForPlayer(Player* player, uint32* npcFlags /*= null
     {
         case TRAINER_TYPE_CLASS:
         case TRAINER_TYPE_PETS:
-            if (m_creatureInfo->trainer_class && m_creatureInfo->trainer_class != player->getClass())
-            {
-                if (npcFlags)
-                    *npcFlags &= ~UNIT_NPC_FLAG_TRAINER_CLASS;
-
-                return false;
-            }
+            return false;
             break;
         case TRAINER_TYPE_MOUNTS:
             if (m_creatureInfo->trainer_race && m_creatureInfo->trainer_race != player->getRace())

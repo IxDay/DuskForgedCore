@@ -1462,6 +1462,8 @@ enum AuraStateType
     AURA_STATE_UNKNOWN22                    = 22,           // C  t| varius spells (63884, 50240)
     AURA_STATE_HEALTH_ABOVE_75_PERCENT      = 23,           // C   |
     AURA_STATE_POWER_BELOW_50_PERCENT       = 24,           // C   |
+    AURA_STATE_POWER_BELOW_20_PERCENT       = 25,           // C   |
+    AURA_STATE_POWER_ABOVE_80_PERCENT       = 26,           // C   |
 };
 
 #define PER_CASTER_AURA_STATE_MASK (\

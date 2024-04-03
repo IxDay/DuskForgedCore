@@ -5722,6 +5722,13 @@ bool Player::LoadFromDB(ObjectGuid playerGuid, CharacterDatabaseQueryHolder cons
     if (HealthAbovePct(75))
         SetFlag(UNIT_FIELD_AURASTATE, 1 << (AURA_STATE_HEALTH_ABOVE_75_PERCENT - 1));
 
+    if (PowerBelowPct(20.f))
+        SetFlag(UNIT_FIELD_AURASTATE, 1 << (AURA_STATE_POWER_BELOW_20_PERCENT- 1));
+    if (PowerBelowPct(50.f))
+        SetFlag(UNIT_FIELD_AURASTATE, 1 << (AURA_STATE_POWER_BELOW_50_PERCENT - 1));
+    if (PowerAbovePct(80.f))
+        SetFlag(UNIT_FIELD_AURASTATE, 1 << (AURA_STATE_POWER_ABOVE_80_PERCENT - 1));
+
     // unapply aura stats if dont meet requirements
     AuraApplicationMap const& Auras = GetAppliedAuras();
     for (AuraApplicationMap::const_iterator itr = Auras.begin(); itr != Auras.end(); ++itr)
@@ -5731,7 +5738,10 @@ bool Player::LoadFromDB(ObjectGuid playerGuid, CharacterDatabaseQueryHolder cons
         SpellInfo const* m_spellInfo = aura->GetSpellInfo();
         if (m_spellInfo->CasterAuraState != AURA_STATE_HEALTHLESS_20_PERCENT &&
             m_spellInfo->CasterAuraState != AURA_STATE_HEALTHLESS_35_PERCENT &&
-            m_spellInfo->CasterAuraState != AURA_STATE_HEALTH_ABOVE_75_PERCENT)
+            m_spellInfo->CasterAuraState != AURA_STATE_HEALTH_ABOVE_75_PERCENT &&
+            m_spellInfo->CasterAuraState != AURA_STATE_POWER_BELOW_50_PERCENT &&
+            m_spellInfo->CasterAuraState != AURA_STATE_POWER_BELOW_20_PERCENT &&
+            m_spellInfo->CasterAuraState != AURA_STATE_POWER_ABOVE_80_PERCENT)
             continue;
 
         if (!HasAuraState((AuraStateType)m_spellInfo->CasterAuraState))

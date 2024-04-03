@@ -1492,7 +1492,9 @@ public:
     // returns the change in power
     int32 ModifyPower(Powers power, int32 val);
     int32 ModifyPowerPct(Powers power, float pct, bool apply = true);
-    [[nodiscard]] bool PowerBelowPct(int32 pct) const { return GetPower(getPowerType()) > GetPowerPct(getPowerType()); }
+    [[nodiscard]] bool PowerAbovePct(float pct) const { return pct < GetPowerPct(POWER_MANA); }
+    [[nodiscard]] bool PowerBelowPct(float pct) const { return pct > GetPowerPct(POWER_MANA);
+    }
 
     [[nodiscard]] uint32 GetAttackTime(WeaponAttackType att) const
     {

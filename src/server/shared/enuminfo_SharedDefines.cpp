@@ -1885,7 +1885,9 @@ AC_API_EXPORT EnumText EnumUtils<AuraStateType>::ToString(AuraStateType value)
         case AURA_STATE_UNKNOWN19: return { "AURA_STATE_UNKNOWN19", "AURA_STATE_UNKNOWN19", "|" };
         case AURA_STATE_UNKNOWN22: return { "AURA_STATE_UNKNOWN22", "AURA_STATE_UNKNOWN22", "C  t| varius spells (63884, 50240)" };
         case AURA_STATE_HEALTH_ABOVE_75_PERCENT: return { "AURA_STATE_HEALTH_ABOVE_75_PERCENT", "AURA_STATE_HEALTH_ABOVE_75_PERCENT", "C   |" };
-        case AURA_STATE_POWER_BELOW_50_PERCENT: return { "AURA_STATE_POWER_BELOW_50_PERCENT", "AURA_STATE_POWER_BELOW_50_PERCENT", "C |" };
+        case AURA_STATE_POWER_BELOW_50_PERCENT: return { "AURA_STATE_POWER_BELOW_50_PERCENT", "AURA_STATE_POWER_BELOW_50_PERCENT", "C   |" };
+        case AURA_STATE_POWER_BELOW_20_PERCENT: return { "AURA_STATE_POWER_BELOW_20_PERCENT", "AURA_STATE_POWER_BELOW_20_PERCENT", "C   |" };
+        case AURA_STATE_POWER_ABOVE_80_PERCENT: return { "AURA_STATE_POWER_ABOVE_80_PERCENT", "AURA_STATE_POWER_ABOVE_80_PERCENT", "C   |" };
         default: throw std::out_of_range("value");
     }
 }
@@ -1917,6 +1919,8 @@ AC_API_EXPORT AuraStateType EnumUtils<AuraStateType>::FromIndex(size_t index)
         case 16: return AURA_STATE_UNKNOWN22;
         case 17: return AURA_STATE_HEALTH_ABOVE_75_PERCENT;
         case 18: return AURA_STATE_POWER_BELOW_50_PERCENT;
+        case 19: return AURA_STATE_POWER_BELOW_20_PERCENT;
+        case 20: return AURA_STATE_POWER_ABOVE_80_PERCENT;
         default: throw std::out_of_range("index");
     }
 }
@@ -1945,6 +1949,8 @@ AC_API_EXPORT size_t EnumUtils<AuraStateType>::ToIndex(AuraStateType value)
         case AURA_STATE_UNKNOWN22: return 16;
         case AURA_STATE_HEALTH_ABOVE_75_PERCENT: return 17;
         case AURA_STATE_POWER_BELOW_50_PERCENT: return 18;
+        case AURA_STATE_POWER_BELOW_20_PERCENT: return 19;
+        case AURA_STATE_POWER_ABOVE_80_PERCENT: return 20;
         default: throw std::out_of_range("value");
     }
 }
