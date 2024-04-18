@@ -1589,7 +1589,7 @@ public:
         return _forgeMythicKeys;
     }
 
-    boolean AffixExistsAndMatchesTier(uint32 affix, uint8 tier) {
+    bool AffixExistsAndMatchesTier(uint32 affix, uint8 tier) {
         auto find = _forgeAffixes.find(affix);
         if (find != _forgeAffixes.end())
             return find->second->tier == tier;
