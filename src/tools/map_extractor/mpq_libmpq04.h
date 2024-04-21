@@ -18,7 +18,7 @@
 #ifndef MPQ_H
 #define MPQ_H
 
-#include "libmpq/mpq.h"
+#include "mpq.h"
 #include "loadlib/loadlib.h"
 #include <cctype>
 #include <cstring>
